@@ -4,11 +4,11 @@ import thirdparty.paymentgateway.TicketPaymentService;
 import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
+import uk.gov.dwp.uc.pairtest.exception.ValidationException;
 import uk.gov.dwp.uc.pairtest.factory.TicketStrategyFactory;
 import uk.gov.dwp.uc.pairtest.strategy.pricing.TicketPricingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.TicketSeatingStrategy;
-import uk.gov.dwp.uc.pairtest.validation.AccountValidator;
-import uk.gov.dwp.uc.pairtest.validation.TicketRequestValidator;
+import uk.gov.dwp.uc.pairtest.validation.Validator;
 
 import java.util.List;
 
@@ -17,15 +17,15 @@ public class TicketServiceImpl implements TicketService {
      * Should only have private methods other than the one below.
      */
 
-    private final TicketRequestValidator ticketRequestValidator;
-    private final AccountValidator accountValidator;
+    private final Validator<List<TicketTypeRequest>> ticketRequestValidator;
+    private final Validator<Long> accountValidator;
     private final TicketStrategyFactory ticketStrategyFactory;
     private final TicketPaymentService ticketPaymentService;
     private final SeatReservationService seatReservationService;
 
     public TicketServiceImpl(
-            TicketRequestValidator ticketRequestValidator,
-            AccountValidator accountValidator,
+            Validator<List<TicketTypeRequest>> ticketRequestValidator,
+            Validator<Long> accountValidator,
             TicketStrategyFactory ticketStrategyFactory,
             TicketPaymentService ticketPaymentService,
             SeatReservationService seatReservationService) {
@@ -38,11 +38,14 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-        this.accountValidator.validateAccount(accountId);
-
         List<TicketTypeRequest> requests = List.of(ticketTypeRequests);
 
-        this.ticketRequestValidator.validateTicketRequest(ticketTypeRequests);
+        try {
+            this.accountValidator.validate(accountId);
+            this.ticketRequestValidator.validate(requests);
+        } catch (ValidationException e) {
+            throw new InvalidPurchaseException();
+        }
 
         int totalPrice = requests
                 .stream()
@@ -63,5 +66,4 @@ public class TicketServiceImpl implements TicketService {
         this.ticketPaymentService.makePayment(accountId, totalPrice);
         this.seatReservationService.reserveSeat(accountId, totalNumberOfSeats);
     }
-
 }

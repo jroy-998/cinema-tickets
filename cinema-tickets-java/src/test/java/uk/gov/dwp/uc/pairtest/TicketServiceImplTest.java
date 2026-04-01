@@ -14,8 +14,9 @@ import uk.gov.dwp.uc.pairtest.strategy.pricing.InfantTicketPricingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.AdultTicketSeatingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.ChildTicketSeatingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.InfantTicketSeatingStrategy;
-import uk.gov.dwp.uc.pairtest.validation.AccountValidator;
-import uk.gov.dwp.uc.pairtest.validation.TicketRequestValidator;
+import uk.gov.dwp.uc.pairtest.validation.Validator;
+
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -23,10 +24,10 @@ public class TicketServiceImplTest {
     private TicketServiceImpl ticketService;
 
     @Mock
-    TicketRequestValidator ticketRequestValidator;
+    Validator<List<TicketTypeRequest>> ticketRequestValidator;
 
     @Mock
-    AccountValidator accountValidator;
+    Validator<Long> accountValidator;
 
     @Mock
     TicketStrategyFactory ticketStrategyFactory;
