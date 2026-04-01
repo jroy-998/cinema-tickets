@@ -2,12 +2,12 @@ package uk.gov.dwp.uc.pairtest;
 
 import thirdparty.paymentgateway.TicketPaymentService;
 import thirdparty.seatbooking.SeatReservationService;
-import uk.gov.dwp.uc.pairtest.calculator.PriceCalculator;
-import uk.gov.dwp.uc.pairtest.calculator.SeatCalculator;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
+import uk.gov.dwp.uc.pairtest.factory.TicketStrategyFactory;
+import uk.gov.dwp.uc.pairtest.strategy.pricing.TicketPricingStrategy;
+import uk.gov.dwp.uc.pairtest.strategy.seating.TicketSeatingStrategy;
 import uk.gov.dwp.uc.pairtest.validation.AccountValidator;
-import uk.gov.dwp.uc.pairtest.validation.DefaultAccountValidator;
 import uk.gov.dwp.uc.pairtest.validation.TicketRequestValidator;
 
 import java.util.List;
@@ -19,22 +19,19 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRequestValidator ticketRequestValidator;
     private final AccountValidator accountValidator;
-    private final PriceCalculator priceCalculator;
-    private final SeatCalculator seatCalculator;
+    private final TicketStrategyFactory ticketStrategyFactory;
     private final TicketPaymentService ticketPaymentService;
     private final SeatReservationService seatReservationService;
 
     public TicketServiceImpl(
             TicketRequestValidator ticketRequestValidator,
             AccountValidator accountValidator,
-            PriceCalculator priceCalculator,
-            SeatCalculator seatCalculator,
+            TicketStrategyFactory ticketStrategyFactory,
             TicketPaymentService ticketPaymentService,
             SeatReservationService seatReservationService) {
         this.ticketRequestValidator = ticketRequestValidator;
         this.accountValidator = accountValidator;
-        this.priceCalculator = priceCalculator;
-        this.seatCalculator = seatCalculator;
+        this.ticketStrategyFactory = ticketStrategyFactory;
         this.ticketPaymentService = ticketPaymentService;
         this.seatReservationService = seatReservationService;
     }
@@ -49,14 +46,18 @@ public class TicketServiceImpl implements TicketService {
 
         int totalPrice = requests
                 .stream()
-                .map(this.priceCalculator::calculateTotalPrice)
-                .mapToInt(Integer::intValue)
+                .mapToInt(request -> {
+                    TicketPricingStrategy pricingStrategy = this.ticketStrategyFactory.getTicketPricingStrategy(request.getTicketType());
+                    return pricingStrategy.calculatePrice(request.getNoOfTickets());
+                })
                 .sum();
 
         int totalNumberOfSeats = requests
                 .stream()
-                .map(this.seatCalculator::calculateNumberOfSeats)
-                .mapToInt(Integer::intValue)
+                .mapToInt(request -> {
+                    TicketSeatingStrategy seatingStrategy = this.ticketStrategyFactory.getTicketSeatingStrategy(request.getTicketType());
+                    return seatingStrategy.calculateNumberOfSeats(request.getNoOfTickets());
+                })
                 .sum();
 
         this.ticketPaymentService.makePayment(accountId, totalPrice);
