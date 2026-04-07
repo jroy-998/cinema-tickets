@@ -1,10 +1,9 @@
-package uk.gov.dwp.uc.pairtest.strategy.validation.account;
+package uk.gov.dwp.uc.pairtest.validation.account;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.dwp.uc.pairtest.exception.AccountIdInvalidException;
-import uk.gov.dwp.uc.pairtest.validation.account.AccountIdValidator;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

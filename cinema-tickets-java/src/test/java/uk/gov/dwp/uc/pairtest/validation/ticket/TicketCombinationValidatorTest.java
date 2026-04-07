@@ -1,11 +1,10 @@
-package uk.gov.dwp.uc.pairtest.strategy.validation.ticket;
+package uk.gov.dwp.uc.pairtest.validation.ticket;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidTicketCombinationException;
-import uk.gov.dwp.uc.pairtest.validation.ticket.TicketCombinationValidator;
 
 import java.util.List;
 
