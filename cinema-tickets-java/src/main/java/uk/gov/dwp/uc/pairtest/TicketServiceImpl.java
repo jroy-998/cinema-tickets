@@ -6,6 +6,7 @@ import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 import uk.gov.dwp.uc.pairtest.exception.ValidationException;
 import uk.gov.dwp.uc.pairtest.factory.TicketStrategyFactory;
+import uk.gov.dwp.uc.pairtest.factory.ValidationFactory;
 import uk.gov.dwp.uc.pairtest.strategy.pricing.TicketPricingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.TicketSeatingStrategy;
 import uk.gov.dwp.uc.pairtest.validation.Validator;
@@ -17,20 +18,17 @@ public class TicketServiceImpl implements TicketService {
      * Should only have private methods other than the one below.
      */
 
-    private final Validator<List<TicketTypeRequest>> ticketRequestValidator;
-    private final Validator<Long> accountValidator;
+    private final ValidationFactory validationFactory;
     private final TicketStrategyFactory ticketStrategyFactory;
     private final TicketPaymentService ticketPaymentService;
     private final SeatReservationService seatReservationService;
 
     public TicketServiceImpl(
-            Validator<List<TicketTypeRequest>> ticketRequestValidator,
-            Validator<Long> accountValidator,
+            ValidationFactory validationFactory,
             TicketStrategyFactory ticketStrategyFactory,
             TicketPaymentService ticketPaymentService,
             SeatReservationService seatReservationService) {
-        this.ticketRequestValidator = ticketRequestValidator;
-        this.accountValidator = accountValidator;
+        this.validationFactory = validationFactory;
         this.ticketStrategyFactory = ticketStrategyFactory;
         this.ticketPaymentService = ticketPaymentService;
         this.seatReservationService = seatReservationService;
@@ -41,8 +39,8 @@ public class TicketServiceImpl implements TicketService {
         List<TicketTypeRequest> requests = List.of(ticketTypeRequests);
 
         try {
-            this.accountValidator.validate(accountId);
-            this.ticketRequestValidator.validate(requests);
+            this.validationFactory.ticketValidator().validate(requests);
+            this.validationFactory.accountValidator().validate(accountId);
         } catch (ValidationException e) {
             throw new InvalidPurchaseException();
         }
