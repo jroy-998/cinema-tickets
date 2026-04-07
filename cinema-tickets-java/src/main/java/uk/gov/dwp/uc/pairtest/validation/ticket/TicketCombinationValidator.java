@@ -11,8 +11,8 @@ public class TicketCombinationValidator implements Validator<List<TicketTypeRequ
 
     @Override
     public void validate(List<TicketTypeRequest> requests) throws ValidationException {
-        if ((getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.INFANT) > 0)
-        || getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.CHILD) > 0
+        if ((getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.INFANT) > 0
+        || getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.CHILD) > 0)
             && getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.ADULT) <=0) {
             throw new InvalidTicketCombinationException();
         }
