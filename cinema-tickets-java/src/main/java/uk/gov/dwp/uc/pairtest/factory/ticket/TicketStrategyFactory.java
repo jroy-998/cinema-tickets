@@ -1,4 +1,4 @@
-package uk.gov.dwp.uc.pairtest.factory;
+package uk.gov.dwp.uc.pairtest.factory.ticket;
 
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.strategy.pricing.TicketPricingStrategy;

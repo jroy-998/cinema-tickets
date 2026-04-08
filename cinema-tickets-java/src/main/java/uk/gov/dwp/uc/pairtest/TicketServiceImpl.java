@@ -6,8 +6,8 @@ import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 import uk.gov.dwp.uc.pairtest.exception.ValidationException;
-import uk.gov.dwp.uc.pairtest.factory.TicketStrategyFactory;
-import uk.gov.dwp.uc.pairtest.factory.ValidationFactory;
+import uk.gov.dwp.uc.pairtest.factory.ticket.TicketStrategyFactory;
+import uk.gov.dwp.uc.pairtest.factory.validation.ValidationFactory;
 import uk.gov.dwp.uc.pairtest.strategy.pricing.TicketPricingStrategy;
 import uk.gov.dwp.uc.pairtest.strategy.seating.TicketSeatingStrategy;
 

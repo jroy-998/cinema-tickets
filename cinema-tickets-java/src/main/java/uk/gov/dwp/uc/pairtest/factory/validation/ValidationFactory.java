@@ -1,4 +1,4 @@
-package uk.gov.dwp.uc.pairtest.factory;
+package uk.gov.dwp.uc.pairtest.factory.validation;
 
 import java.util.List;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
