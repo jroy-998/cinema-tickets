@@ -6,10 +6,10 @@ import uk.gov.dwp.uc.pairtest.validation.Validator;
 
 public class AccountIdValidator implements Validator<Long> {
 
-    @Override
-    public void validate(Long accountId) throws ValidationException {
-        if (accountId < 0) {
-            throw new AccountIdInvalidException();
-        }
+  @Override
+  public void validate(Long accountId) throws ValidationException {
+    if (accountId < 0) {
+      throw new AccountIdInvalidException();
     }
+  }
 }

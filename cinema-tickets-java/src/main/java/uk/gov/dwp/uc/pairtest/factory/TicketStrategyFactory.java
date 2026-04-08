@@ -6,7 +6,7 @@ import uk.gov.dwp.uc.pairtest.strategy.seating.TicketSeatingStrategy;
 
 public interface TicketStrategyFactory {
 
-    TicketPricingStrategy getTicketPricingStrategy(TicketTypeRequest.Type ticketType);
+  TicketPricingStrategy getTicketPricingStrategy(TicketTypeRequest.Type ticketType);
 
-    TicketSeatingStrategy getTicketSeatingStrategy(TicketTypeRequest.Type ticketType);
+  TicketSeatingStrategy getTicketSeatingStrategy(TicketTypeRequest.Type ticketType);
 }

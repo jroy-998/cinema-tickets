@@ -1,4 +1,3 @@
 package uk.gov.dwp.uc.pairtest.exception;
 
-public class ValidationException extends RuntimeException {
-}
+public class ValidationException extends RuntimeException {}

@@ -4,5 +4,5 @@ import uk.gov.dwp.uc.pairtest.exception.ValidationException;
 
 public interface Validator<T> {
 
-    void validate(T input) throws ValidationException;
+  void validate(T input) throws ValidationException;
 }
