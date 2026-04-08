@@ -9,7 +9,7 @@ public class AccountIdValidator implements Validator<Long> {
   @Override
   public void validate(Long accountId) throws ValidationException {
     if (accountId < 0) {
-      throw new AccountIdInvalidException();
+      throw new AccountIdInvalidException(String.format("Account ID %s is invalid", accountId));
     }
   }
 }

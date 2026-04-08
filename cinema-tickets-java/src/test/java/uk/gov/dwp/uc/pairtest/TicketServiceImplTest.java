@@ -1,7 +1,6 @@
 package uk.gov.dwp.uc.pairtest;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -118,12 +117,18 @@ public class TicketServiceImplTest {
     when(validationFactory.accountValidator()).thenReturn(accountValidator);
     when(validationFactory.ticketValidator()).thenReturn(ticketValidator);
 
-    doThrow(new AccountIdInvalidException()).when(accountValidator).validate(-1L);
+    doThrow(new AccountIdInvalidException("Account ID Invalid"))
+        .when(accountValidator)
+        .validate(-1L);
 
     TicketTypeRequest request = new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1);
 
-    assertThrows(
-        InvalidPurchaseException.class, () -> this.ticketService.purchaseTickets(-1L, request));
+    InvalidPurchaseException exception =
+        assertThrows(
+            InvalidPurchaseException.class, () -> this.ticketService.purchaseTickets(-1L, request));
+
+    assertEquals(
+        "Error processing purchase: Validation error: Account ID Invalid", exception.getMessage());
   }
 
   @Test
@@ -133,11 +138,16 @@ public class TicketServiceImplTest {
 
     TicketTypeRequest request = new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1);
 
-    doThrow(new InvalidTicketCombinationException())
+    doThrow(new InvalidTicketCombinationException("Invalid ticket combination"))
         .when(ticketValidator)
         .validate(List.of(request));
 
-    assertThrows(
-        InvalidPurchaseException.class, () -> this.ticketService.purchaseTickets(1L, request));
+    InvalidPurchaseException exception =
+        assertThrows(
+            InvalidPurchaseException.class, () -> this.ticketService.purchaseTickets(1L, request));
+
+    assertEquals(
+        "Error processing purchase: Validation error: Invalid ticket combination",
+        exception.getMessage());
   }
 }

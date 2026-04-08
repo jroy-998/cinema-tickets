@@ -1,7 +1,6 @@
 package uk.gov.dwp.uc.pairtest.validation.ticket;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +27,19 @@ public class TotalTicketsValidatorTest {
   @ParameterizedTest
   @MethodSource("invalidTicketCombinationsDataProvider")
   void invalidTicketCombinationsWillFailValidation(List<TicketTypeRequest> ticketTypeRequests) {
-    assertThrows(
-        MaximumTicketsExceededException.class,
-        () -> totalTicketsValidator.validate(ticketTypeRequests));
+    MaximumTicketsExceededException exception =
+        assertThrows(
+            MaximumTicketsExceededException.class,
+            () -> totalTicketsValidator.validate(ticketTypeRequests));
+
+    int totalTickets =
+        ticketTypeRequests.stream().mapToInt(TicketTypeRequest::getNoOfTickets).sum();
+
+    assertEquals(
+        String.format(
+            "Validation error: Number of tickets: %s, exceeds maximum allowed: %s",
+            totalTickets, 25),
+        exception.getMessage());
   }
 
   private static List<List<TicketTypeRequest>> validTicketCombinationsDataProvider() {

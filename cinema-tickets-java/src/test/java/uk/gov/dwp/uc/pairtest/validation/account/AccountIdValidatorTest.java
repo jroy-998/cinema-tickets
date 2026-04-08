@@ -1,7 +1,6 @@
 package uk.gov.dwp.uc.pairtest.validation.account;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +25,10 @@ public class AccountIdValidatorTest {
   @ParameterizedTest
   @ValueSource(longs = {-1L, -123L, -54321L})
   void invalidAccountIdWillThrowException(Long accountId) {
-    assertThrows(AccountIdInvalidException.class, () -> accountIdValidator.validate(accountId));
+    AccountIdInvalidException exception =
+        assertThrows(AccountIdInvalidException.class, () -> accountIdValidator.validate(accountId));
+    assertEquals(
+        String.format("Validation error: Account ID %s is invalid", accountId),
+        exception.getMessage());
   }
 }

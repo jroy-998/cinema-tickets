@@ -39,7 +39,7 @@ public class TicketServiceImpl implements TicketService {
       this.validationFactory.ticketValidator().validate(requests);
       this.validationFactory.accountValidator().validate(accountId);
     } catch (ValidationException e) {
-      throw new InvalidPurchaseException();
+      throw new InvalidPurchaseException("Error processing purchase: " + e.getMessage());
     }
 
     int totalPrice =

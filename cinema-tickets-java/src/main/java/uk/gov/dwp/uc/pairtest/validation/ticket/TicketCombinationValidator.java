@@ -13,7 +13,8 @@ public class TicketCombinationValidator implements Validator<List<TicketTypeRequ
     if ((getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.INFANT) > 0
             || getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.CHILD) > 0)
         && getNumberOfTicketsPerType(requests, TicketTypeRequest.Type.ADULT) <= 0) {
-      throw new InvalidTicketCombinationException();
+      throw new InvalidTicketCombinationException(
+          "Ticket combination is invalid. Unable to purchase child/infant ticket without an adult ticket");
     }
   }
 

@@ -1,7 +1,6 @@
 package uk.gov.dwp.uc.pairtest.validation.ticket;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +27,14 @@ public class TicketCombinationValidatorTest {
   @ParameterizedTest
   @MethodSource("invalidTicketCombinationDataProvider")
   void invalidRequestWillFailValidation(List<TicketTypeRequest> ticketTypeRequests) {
-    assertThrows(
-        InvalidTicketCombinationException.class,
-        () -> ticketCombinationValidator.validate(ticketTypeRequests));
+    InvalidTicketCombinationException exception =
+        assertThrows(
+            InvalidTicketCombinationException.class,
+            () -> ticketCombinationValidator.validate(ticketTypeRequests));
+
+    assertEquals(
+        "Validation error: Ticket combination is invalid. Unable to purchase child/infant ticket without an adult ticket",
+        exception.getMessage());
   }
 
   private static List<List<TicketTypeRequest>> validTicketCombinationsDataProvider() {
